@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     image: {
-        type: Array,
+        type: [String], // Just store the image URLs (from Cloudinary)
         required: true
     },
     category: {
@@ -26,19 +26,18 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     sizes: {
-        type: Array,
+        type: [String],
         required: true
     },
     date: {
         type: Number,
-        required: true
+        default: Date.now
     },
     bestseller: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
-},
-    { timestamps: true }
-);
+});
 
 const productModel = mongoose.models.product || mongoose.model('product', productSchema);
 
