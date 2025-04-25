@@ -64,11 +64,11 @@ const Product = () => {
           </div>
           <p className='mt-2 text-xl font-medium'>{currency}{productData.price}</p>
           <p className='mt-5 text-sm text-gray-500 md:w-4/5'>{productData.description}</p>
-          <div className='flex flex-col gap-4 my-5'>
+          <div className='flex flex-col gap-4 my-4'>
             <p>Select Size</p>
             <div className='flex gap-2'>
               {productData.sizes.map((item, index)=> (
-                <button onClick={() => setSize(item)} key={index} className={`border text-[12px] w-[25px] h-[25px] bg-gray-100 ${item === size ? 'bg-gray-900 text-white' : ''}`}>{item}</button>
+                <button onClick={() => setSize(item)} key={index} className={`border text-[14px] w-[40px] h-[35px] bg-gray-100 ${item === size ? 'bg-gray-900 text-white' : ''}`}>{item}</button>
               ))}
             </div>
           </div>

@@ -1,92 +1,11 @@
 import { v2 as cloudinary } from 'cloudinary'
 import Product from '../models/productModel.js';
 
-// Function for add product
-// const addProduct = async (req, res) => {
-//     try {
-       
-//         const { name, description, price, category, subCategory, sizes, bestseller } = req.body
-//         console.log(req)
-
-//         const image1 = req.files.image1 && req.files.image1[0]
-//         const image2 = req.files.image2 && req.files.image2[0]
-//         const image3 = req.files.image3 && req.files.image3[0]
-//         const image4 = req.files.image4 && req.files.image4[0]
-
-//         // const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
-
-//         // let imagesUrl = await Promise.all(
-//         //     images.map(async (item) => {
-//         //         let result = await cloudinary.uploader.upload(item.path, {resource_type: 'image'})
-//         //         return result.secure_url
-//         //     })
-//         // )
-
-//         console.log(name, description, price, category, subCategory, sizes, bestseller)
-//         // console.log(imagesUrl)
-//         console.log(image1, image2, image3, image4)
-
-
-//         res.json({})
-//     } catch (error) {
-//         console.log(error)
-//         res.json({ success: false, message: error.message })
-//     }
-// }
-
-// const addProduct = async (req, res) => {
-//     console.log("Calling addProduct");
-//     const {
-//         name,
-//         description,
-//         price,
-//         category,
-//         subCategory,
-//         sizes,
-//         bestseller,
-//         images,
-//       } = req.body;
-
-//       try {
-//         if (!images || !Array.isArray(images) || images.length === 0) {
-//           return res.status(400).json({ success: false, message: "At least one image is required" });
-//         }
-    
-//         // Upload each image to Cloudinary
-//         const uploadedImages = await Promise.all(
-//           images.map((img) =>
-//             cloudinary.uploader.upload(img, { folder: "products" })
-//           )
-//         );
-    
-//         // Get the secure URLs
-//         const imageUrls = uploadedImages.map((result) => result.secure_url);
-    
-//         const product = await Product.create({
-//           name,
-//           description,
-//           price,
-//           category,
-//           subCategory,
-//           sizes,
-//           bestseller,
-//           image: imageUrls // Save array of image URLs
-//         });
-    
-//         res.status(201).json({ success: true, product });
-//       } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ success: false, message: error.message });
-//       }
-// };
-  
-
-// Function for list product
-
+// Function to add products
 const addProduct = async (req, res) => {
   try {
-    console.log("Request Body:", req.body);  // Log req.body
-    console.log("Request Files:", req.files); // Log req.files
+    // console.log("Request Body:", req.body);  // Log req.body
+    // console.log("Request Files:", req.files); // Log req.files
 
     // Only proceed if both req.body and req.files are populated
     if (!req.body || !req.files || req.files.length === 0) {
@@ -113,18 +32,22 @@ const addProduct = async (req, res) => {
     const newProduct = new Product({
       name,
       description,
-      price,
+      price: Number(price),
       category,
       subCategory,
-      sizes: sizes.split(','), // Convert comma-separated sizes string to an array
-      bestseller: bestseller === 'true',
-      image: imageUrls
+      sizes: JSON.parse(sizes),
+      bestseller: bestseller === 'true' ? true : false,
+      image: imageUrls,
+      date: Date.now()
     });
+
+    console.log("New Product:", newProduct);
 
     // Save to DB
     await newProduct.save();
 
     res.status(201).json({
+      success: true,
       message: "Product added successfully",
       product: newProduct
     });
@@ -135,18 +58,41 @@ const addProduct = async (req, res) => {
 };
 
 
+// Function to list all products
 const listProduct = async (req, res) => {
     
+  try {
+
+    const products = await Product.find({}).sort({date: -1})
+    res.json({success: true, products})
+
+  } catch (error) {
+    console.error("Error listing products:", error);
+    res.status(500).json({ success: false, message: "Error listing products", error: error.message });
+  }
 }
 
 // Function for removing product
 const removeProduct = async (req, res) => {
-    
+    try {
+      await Product.findByIdAndDelete(req.body.id);
+      res.json({ success: true, message: "Product removed successfully" });
+    } catch (error) {
+      console.error("Error removing product:", error);
+      res.status(500).json({ success: false, message: "Error removing product", error: error.message });
+    }
 }
 
 // Function for single product info
 const singleProduct = async (req, res) => {
-    
+    try {
+      const { productId } = req.body;
+      const product = await Product.findById(productId);
+      res.json({ success: true, product });
+    } catch (error) {
+        console.error("Error listing products:", error);
+        res.status(500).json({ success: false, message: "Error listing products", error: error.message });
+    }
 }
 
 export { addProduct, listProduct, removeProduct, singleProduct }

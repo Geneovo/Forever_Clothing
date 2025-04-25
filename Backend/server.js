@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
+import cartRouter from "./routes/cartRoute.js";
+import orderRouter from "./routes/orderROute.js";
 
 // App Config
 const app = express();
@@ -16,15 +18,15 @@ connectCloudinary();
 // ✅ Only use CORS globally
 app.use(cors());
 
-// ✅ Mount the multipart/form-data route FIRST
-app.use("/api/product", productRouter);
-
-// ✅ Then use JSON body parsers (for non-file routes)
+// ✅ First use the JSON body parser before mounting the routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Other routes
+// ✅ Routes
+app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 
 // Health check
 app.get("/", (req, res) => {
