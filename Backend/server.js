@@ -6,7 +6,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
 import cartRouter from "./routes/cartRoute.js";
-import orderRouter from "./routes/orderROute.js";
+import orderRouter from "./routes/ordersRoute.js";
 
 // App Config
 const app = express();
@@ -30,7 +30,7 @@ app.use("/api/order", orderRouter);
 
 // Health check
 app.get("/", (req, res) => {
-  res.send("API is running");
+  res.send("APIs are running");
 });
 
 app.listen(port, () => console.log(`Server running on ${port}`));
