@@ -112,7 +112,14 @@ const Cart = () => {
           <div className='w-full text-end'>
             <button 
             // onClick={handleCheckout}
-            onClick={() => navigate('/place-order')}
+            onClick={() => {
+              if (cartData.length === 0) {
+                toast.error('Your cart is empty');
+              }
+              else {
+                navigate('/place-order');
+              }
+            }}
             className='bg-black text-white text-sm my-4 px-8 py-3'>
               PROCEED TO CHECKOUT
             </button>

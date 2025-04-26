@@ -69,7 +69,7 @@ const Navbar = () => {
                 </button>
             )}
 
-            <div className='relative'>
+            <div ref={dropdownRef} className='relative'>
                 <img onClick={() => {
                     if (token) {
                         setIsOpen(prev => !prev);
@@ -79,7 +79,7 @@ const Navbar = () => {
                  }} src={assets.profile_icon}className='w-5 cursor-pointer' alt="" />
                 {/* Dropdown Menu */}
                 {token && isOpen &&
-                <div ref={dropdownRef} className='absolute right-0 pt-4 z-50'>
+                <div className='absolute right-0 pt-4 z-50'>
                     <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
                         <p className='cursor-pointer hover:text-black text-lg'>My Profile</p>
                         <p onClick={() => {
